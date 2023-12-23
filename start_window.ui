@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Start_Window</class>
+ <widget class="QDialog" name="Start_Window">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>970</width>
+    <height>690</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QLabel" name="background">
+   <property name="geometry">
+    <rect>
+     <x>-60</x>
+     <y>-140</y>
+     <width>1201</width>
+     <height>951</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>data/maxresdefault.jpg</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="name_of_the_game_lb">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>180</y>
+     <width>521</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Minecraft Seven Cyrillic (russi</family>
+     <pointsize>80</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);
+</string>
+   </property>
+   <property name="text">
+    <string>Astralix</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="start_game_button">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>390</y>
+     <width>231</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Minecraft Seven Cyrillic (russi</family>
+     <pointsize>25</pointsize>
+     <weight>75</weight>
+     <italic>false</italic>
+     <bold>true</bold>
+     <underline>false</underline>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(26, 66, 117);
+color: rgb(114, 177, 255);
+
+border-radius : 50; 
+border : 3px solid blue;
+
+
+border-top-color : red; 
+border-left-color :pink;
+border-right-color :yellow;
+border-bottom-color : green</string>
+   </property>
+   <property name="text">
+    <string>Начать</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="rules_button">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>470</y>
+     <width>231</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Minecraft Seven Cyrillic (russi</family>
+     <pointsize>25</pointsize>
+     <weight>75</weight>
+     <italic>false</italic>
+     <bold>true</bold>
+     <underline>false</underline>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(26, 66, 117);
+color: rgb(114, 177, 255);
+
+border-radius : 50; 
+border : 3px solid white;
+
+border-top-color : red; 
+border-left-color :pink;
+border-right-color :yellow;
+border-bottom-color : green</string>
+   </property>
+   <property name="text">
+    <string>Правила</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="created_by_lb">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>660</y>
+     <width>201</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Minecraft Seven Cyrillic (russi</family>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
+   <property name="text">
+    <string>created by Radmir and Ruslan</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
