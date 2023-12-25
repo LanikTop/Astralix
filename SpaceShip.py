@@ -25,7 +25,7 @@ def load_image(name, colorkey=None):
 class SpaceShip:
     def __init__(self, size1, size2):
         # Параметры корабля
-        self.speed = 1000
+        self.speed = 2
         self.shoot_speed = 1
         self.shoot_count = 1
         self.hp = 1
@@ -46,14 +46,10 @@ class SpaceShip:
         self.ship.rect.x += move_x
         self.ship.rect.y += move_y
 
-    def shoot(self, x, y):
-        return Bullet(x, y)
-
 
 class Bullet:
-    def __init__(self, size1, size2):
-        self.shoot_count = 1
-        self.all_sprites = pygame.sprite.Group()
+    def __init__(self, size1, size2, sprite):
+        self.all_sprites = sprite
         self.bullet = pygame.sprite.Sprite()
         self.bullet.image = load_image('bullet.png', -1)
         self.bullet.image = pygame.transform.scale(self.bullet.image, (150, 150))
@@ -62,21 +58,17 @@ class Bullet:
         self.bullet.rect.x = size1
         self.bullet.rect.y = size2
 
-    def move_bullet(self, way):
-        self.bullet.rect.y -= way
-
 
 class Meteor:
-    def __init__(self, size1, size2):
-        self.meteor_speed = 10
-        self.all_sprites = pygame.sprite.Group()
-        self.bullet = pygame.sprite.Sprite()
+    def __init__(self, size1, sprite):
+        self.size1 = size1
+        self.meteor = pygame.sprite.Sprite()
         self.meteor.image = load_image('meteor_1.png', -1)
-        self.meteor.image = pygame.transform.scale(self.meteor.image, (150, 150))
-        self.meteor.rect = self.bullet.image.get_rect()
-        self.all_sprites.add(self.meteor)
-        self.meteor.rect.x = choice(range)
-        self.meteor.rect.y = size2
+        self.meteor.image = pygame.transform.scale(self.meteor.image, (120, 120))
+        self.meteor.rect = self.meteor.image.get_rect()
+        sprite.add(self.meteor)
+        self.meteor.rect.x = choice(range(size1))
+        self.meteor.rect.y = -20
 
 
 def start_game_buttle():
@@ -85,16 +77,20 @@ def start_game_buttle():
     screen = pygame.display.set_mode([1000, 700])
     width = screen.get_width()
     height = screen.get_height()
+    backround = load_image('backround.png', -1)
     running = True
     ship = SpaceShip(width, height)
     mouse_down = False
     go_move = False
-    bullets = []
+    bullets = pygame.sprite.Group()
+    meteorits = pygame.sprite.Group()
     timer_shoots = 0
+    timer_meteors = 0
+    way_ship = ship.speed
+    way_bullet = 0.7
+    way_meteor = 0.51
+    life = True
     while running:
-        tick = CLOCK.tick() / 1000
-        way_ship = ship.speed * tick
-        way_bullet = 750 * tick
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -106,36 +102,59 @@ def start_game_buttle():
                     go_move = True
             if event.type == pygame.MOUSEBUTTONUP:
                 mouse_down = False
-        if go_move and ship.ship.rect.x == x and ship.ship.rect.y == y:
-            go_move = False
-        if go_move:
-            if ship.ship.rect.x < x:
-                ship.move_ship(way_ship, 0)
-                if ship.ship.rect.x > x:
-                    ship.ship.rect.x = x
-            if ship.ship.rect.x > x:
-                ship.move_ship(-way_ship, 0)
+        for elem in meteorits:
+            if pygame.sprite.collide_mask(ship.ship, elem):
+                life = False
+        if life:
+            if go_move and ship.ship.rect.x == x and ship.ship.rect.y == y:
+                go_move = False
+            if go_move:
                 if ship.ship.rect.x < x:
-                    ship.ship.rect.x = x
-            if ship.ship.rect.y < y:
-                ship.move_ship(0, way_ship)
-                if ship.ship.rect.y > y:
-                    ship.ship.rect.y = y
-            if ship.ship.rect.y > y:
-                ship.move_ship(0, -way_ship)
+                    ship.move_ship(way_ship, 0)
+                    if ship.ship.rect.x > x:
+                        ship.ship.rect.x = x
+                if ship.ship.rect.x > x:
+                    ship.move_ship(-way_ship, 0)
+                    if ship.ship.rect.x < x:
+                        ship.ship.rect.x = x
                 if ship.ship.rect.y < y:
-                    ship.ship.rect.y = y
+                    ship.move_ship(0, way_ship)
+                    if ship.ship.rect.y > y:
+                        ship.ship.rect.y = y
+                if ship.ship.rect.y > y:
+                    ship.move_ship(0, -way_ship)
+                    if ship.ship.rect.y < y:
+                        ship.ship.rect.y = y
             timer_shoots += 1
-            if timer_shoots > 1000:
-                bullets.append(ship.shoot(ship.ship.rect.x + 6, ship.ship.rect.y))
+            if timer_shoots > 500:
+                Bullet(ship.ship.rect.x + 6, ship.ship.rect.y, bullets)
                 timer_shoots = 0
-        screen.fill((0, 0, 0))
-        ship.all_sprites.draw(screen)
-        for i in range(len(bullets)):
-            bullets[i].all_sprites.draw(screen)
-            bullets[i].move_bullet(way_bullet)
-            if bullets[i].bullet.rect.y < 0:
-                del bullets[i]
+            timer_meteors += 1
+            if timer_meteors > 2000:
+                Meteor(width, meteorits)
+                timer_meteors = 0
+            screen.fill((0, 0, 0))
+            screen.blit(backround, (0, 0))
+            ship.all_sprites.draw(screen)
+            for elem in bullets:
+                elem.rect.y -= way_bullet
+                if elem.rect.y < -100:
+                    elem.kill()
+                else:
+                    for elem2 in meteorits:
+                        if pygame.sprite.collide_mask(elem, elem2):
+                            elem2.kill()
+                            elem.kill()
+            for elem in meteorits:
+                elem.rect.y += way_meteor
+                if elem.rect.y > height:
+                    elem.kill()
+            meteorits.draw(screen)
+            bullets.draw(screen)
+        else:
+            screen.fill((0, 0, 0))
+            gameover_image = load_image('gameover.png', -1)
+            gameover_image = pygame.transform.scale(gameover_image, (1000, 700))
+            screen.blit(gameover_image, (0, 0))
         pygame.display.flip()
-
     sys.exit()
