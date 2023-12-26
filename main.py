@@ -3,6 +3,7 @@ from start_window import Ui_Start_Window
 from rules_window import Ui_Rules_Window
 from shop_window import Ui_Shop_Window
 from SpaceShip import *
+import sqlite3
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QWidget, QPushButton, QVBoxLayout, QLabel, QFileDialog, \
     QListWidgetItem
@@ -51,6 +52,10 @@ class Shop_Window(QDialog, Ui_Shop_Window):
         super().__init__()
         self.shop_window_Ui(self)
 
+        con = sqlite3.connect("player_data.bd")
+        cur = con.cursor()
+
+        self.balance = cur.execute('''SELECT money FROM info_users WHERE id=1''').fetchone()[0]
         self.go_back_button.clicked.connect(self.go_back)
         self.pushButton_1.clicked.connect(self.print_no_money)
         self.pushButton_1.setIcon(QtGui.QIcon('data\money.png'))
@@ -76,7 +81,7 @@ class Shop_Window(QDialog, Ui_Shop_Window):
         self.pushButton_6.setIcon(QtGui.QIcon('data\money.png'))
         self.pushButton_6.setIconSize(QtCore.QSize(40, 40))
 
-        self.check_balance.setText('0')
+        self.check_balance.setText(str(self.balance))
         self.no_money_label.hide()
 
     def print_no_money(self):
