@@ -1,10 +1,13 @@
 import sys
 from start_window import Ui_Start_Window
 from rules_window import Ui_Rules_Window
+from shop_window import Ui_Shop_Window
 from SpaceShip import *
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QWidget, QPushButton, QVBoxLayout, QLabel, QFileDialog, \
     QListWidgetItem
+
+from PyQt5 import QtGui, QtCore
 
 
 class Start_Window(QMainWindow, Ui_Start_Window):
@@ -14,6 +17,12 @@ class Start_Window(QMainWindow, Ui_Start_Window):
 
         self.rules_button.clicked.connect(self.open_rules_window)
         self.start_game_button.clicked.connect(self.start_game)
+        self.shop_button.clicked.connect(self.open_shop_window)
+
+    def open_shop_window(self):
+        self.shop_ex = Shop_Window()
+        self.shop_ex.show()
+        self.close()
 
     def open_rules_window(self):
         self.rules_ex = Rules_Window()
@@ -36,6 +45,49 @@ class Rules_Window(QDialog, Ui_Rules_Window):
         self.start_ex = Start_Window()
         self.start_ex.show()
         self.close()
+
+class Shop_Window(QDialog, Ui_Shop_Window):
+    def __init__(self):
+        super().__init__()
+        self.shop_window_Ui(self)
+
+        self.go_back_button.clicked.connect(self.go_back)
+        self.pushButton_1.clicked.connect(self.print_no_money)
+        self.pushButton_1.setIcon(QtGui.QIcon('data\money.png'))
+        self.pushButton_1.setIconSize(QtCore.QSize(40, 40))
+
+        self.pushButton_2.clicked.connect(self.print_no_money)
+        self.pushButton_2.setIcon(QtGui.QIcon('data\money.png'))
+        self.pushButton_2.setIconSize(QtCore.QSize(40, 40))
+
+        self.pushButton_3.clicked.connect(self.print_no_money)
+        self.pushButton_3.setIcon(QtGui.QIcon('data\money.png'))
+        self.pushButton_3.setIconSize(QtCore.QSize(40, 40))
+
+        self.pushButton_4.clicked.connect(self.print_no_money)
+        self.pushButton_4.setIcon(QtGui.QIcon('data\money.png'))
+        self.pushButton_4.setIconSize(QtCore.QSize(40, 40))
+
+        self.pushButton_5.clicked.connect(self.print_no_money)
+        self.pushButton_5.setIcon(QtGui.QIcon('data\money.png'))
+        self.pushButton_5.setIconSize(QtCore.QSize(40, 40))
+
+        self.pushButton_6.clicked.connect(self.print_no_money)
+        self.pushButton_6.setIcon(QtGui.QIcon('data\money.png'))
+        self.pushButton_6.setIconSize(QtCore.QSize(40, 40))
+
+        self.check_balance.setText('0')
+        self.no_money_label.hide()
+
+    def print_no_money(self):
+        self.no_money_label.show()
+    def go_back(self):
+        self.start_ex = Start_Window()
+        self.start_ex.show()
+        self.close()
+
+
+
 
 
 if __name__ == '__main__':

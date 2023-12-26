@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>970</width>
-    <height>690</height>
+    <width>1021</width>
+    <height>680</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,10 +16,10 @@
   <widget class="QLabel" name="background">
    <property name="geometry">
     <rect>
-     <x>-60</x>
-     <y>-140</y>
-     <width>1201</width>
-     <height>951</height>
+     <x>0</x>
+     <y>-160</y>
+     <width>1331</width>
+     <height>1011</height>
     </rect>
    </property>
    <property name="text">
@@ -145,6 +145,42 @@ border-bottom-color : green</string>
    </property>
    <property name="text">
     <string>created by Radmir and Ruslan</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="shop_button">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>550</y>
+     <width>231</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Minecraft Seven Cyrillic (russi</family>
+     <pointsize>25</pointsize>
+     <weight>75</weight>
+     <italic>false</italic>
+     <bold>true</bold>
+     <underline>false</underline>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(26, 66, 117);
+color: rgb(114, 177, 255);
+
+border-radius : 50; 
+border : 3px solid blue;
+
+
+border-top-color : red; 
+border-left-color :pink;
+border-right-color :yellow;
+border-bottom-color : green</string>
+   </property>
+   <property name="text">
+    <string>Магазин</string>
    </property>
   </widget>
  </widget>

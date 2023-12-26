@@ -25,9 +25,9 @@ class Ui_Rules_Window(object):
         font.setWeight(75)
         self.go_back_button.setFont(font)
         self.go_back_button.setStyleSheet("border-radius : 50; \n"
-"color: rgb(255, 255, 255);\n"
-"border : 2px solid white\n"
-"")
+                                          "color: rgb(255, 255, 255);\n"
+                                          "border : 2px solid white\n"
+                                          "")
         self.go_back_button.setObjectName("go_back_button")
 
         self.retranslateUi(Rules_Window)
