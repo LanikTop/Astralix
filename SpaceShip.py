@@ -1,6 +1,7 @@
 import pygame
 import os
 import sys
+import sqlite3
 from random import choice
 
 CLOCK = pygame.time.Clock()
@@ -24,12 +25,6 @@ def load_image(name, colorkey=None):
 
 class SpaceShip:
     def __init__(self, size1, size2):
-        # Параметры корабля
-        self.speed = 2
-        self.shoot_speed = 1
-        self.shoot_count = 1
-        self.hp = 1
-        # Создание корабля
         self.all_sprites = pygame.sprite.Group()
         self.ship = pygame.sprite.Sprite()
         self.ship.image = load_image('ship.png', -1)
@@ -39,9 +34,6 @@ class SpaceShip:
         self.ship.rect.x = size1 // 2 - 75
         self.ship.rect.y = int(size2 * 0.8)
 
-    def get_damage(self, damage):
-        self.hp -= damage
-
     def move_ship(self, move_x, move_y):
         self.ship.rect.x += move_x
         self.ship.rect.y += move_y
@@ -49,95 +41,146 @@ class SpaceShip:
 
 class Bullet:
     def __init__(self, size1, size2, sprite):
-        self.all_sprites = sprite
         self.bullet = pygame.sprite.Sprite()
         self.bullet.image = load_image('bullet.png', -1)
         self.bullet.image = pygame.transform.scale(self.bullet.image, (150, 150))
         self.bullet.rect = self.bullet.image.get_rect()
-        self.all_sprites.add(self.bullet)
+        sprite.add(self.bullet)
         self.bullet.rect.x = size1
         self.bullet.rect.y = size2
 
 
 class Meteor:
     def __init__(self, size1, sprite):
-        self.size1 = size1
         self.meteor = pygame.sprite.Sprite()
         self.meteor.image = load_image('meteor_1.png', -1)
         self.meteor.image = pygame.transform.scale(self.meteor.image, (120, 120))
         self.meteor.rect = self.meteor.image.get_rect()
         sprite.add(self.meteor)
-        self.meteor.rect.x = choice(range(size1))
+        self.meteor.rect.x = choice(range(size1 - 120))
         self.meteor.rect.y = -20
 
 
-def start_game_buttle():
+class Coin:
+    def __init__(self, size1, sprite):
+        self.coin = pygame.sprite.Sprite()
+        self.coin.image = load_image('money.png', -1)
+        self.coin.image = pygame.transform.scale(self.coin.image, (50, 50))
+        self.coin.rect = self.coin.image.get_rect()
+        sprite.add(self.coin)
+        self.coin.rect.x = choice(range(size1 - 120))
+        self.coin.rect.y = -20
+
+
+def start_game_buttle(player=1):
+    # Параметры игры
+    con = sqlite3.connect("player_data.db")
+    cur = con.cursor()
+    result = cur.execute(f"""SELECT * FROM info_users WHERE id = {player}""").fetchone()
+    player_speed = 10 + 5 * result[2]
+    bullet_rate = 225 - 25 * result[3]
+    bullet_speed = 6 + 1 * result[4]
+    meteor_speed = 1
     # Создание окна
     pygame.init()
-    screen = pygame.display.set_mode([1000, 700])
-    width = screen.get_width()
-    height = screen.get_height()
+    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+    # Задний фон
     backround = load_image('backround.png', -1)
-    running = True
-    ship = SpaceShip(width, height)
+    backround = pygame.transform.scale(backround, screen.get_size())
+    # Пауза
+    pause = load_image('pause.png', -1)
+    pause = pygame.transform.scale(pause, (150, 150))
+    continuue = load_image('continue.png', -1)
+    continuue = pygame.transform.scale(continuue, (screen.get_width() // 3, 150))
+    quit = load_image('quit.png', -1)
+    quit = pygame.transform.scale(quit, (screen.get_width() // 3, 150))
+    # Корабль
+    ship = SpaceShip(*screen.get_size())
+    # Флаги и группы перед началом
     mouse_down = False
     go_move = False
     bullets = pygame.sprite.Group()
     meteorits = pygame.sprite.Group()
+    coins = pygame.sprite.Group()
     timer_shoots = 0
     timer_meteors = 0
-    way_ship = ship.speed
-    way_bullet = 0.7
-    way_meteor = 0.51
+    timer_coins = 0
     life = True
+    running = True
+    # Начало игры
     while running:
+        pygame.time.delay(10)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_down = True
+            if event.type == pygame.MOUSEBUTTONUP:
+                if event.pos[0] >= (screen.get_width() - 150) and event.pos[1] <= 150:
+                    life = 'pause'
+                if life == 'pause' and screen.get_width() // 3 < event.pos[0] < (screen.get_width() * 2 // 3) and int(
+                        screen.get_height() // 3.5) < event.pos[1] < int(screen.get_height() // 3.5) + 150:
+                    life = True
+                if life == 'pause' and screen.get_width() // 3 < event.pos[0] < (
+                        screen.get_width() * 2 // 3) and screen.get_height() // 2 < event.pos[1] < (
+                        screen.get_height() // 2 + 150):
+                    running = False
             if event.type == pygame.MOUSEMOTION and mouse_down:
                 x, y = event.pos[0] - 75, event.pos[1] - 75
                 if not go_move:
                     go_move = True
             if event.type == pygame.MOUSEBUTTONUP:
                 mouse_down = False
+        # Проверка смерти
         for elem in meteorits:
             if pygame.sprite.collide_mask(ship.ship, elem):
                 life = False
-        if life:
+        # Режим паузы
+        if life == 'pause':
+            pygame.draw.rect(screen, pygame.Color((128, 128, 128)), (
+                screen.get_width() // 4, screen.get_height() // 4, screen.get_width() // 2, screen.get_height() // 2))
+            screen.blit(continuue, (screen.get_width() // 3, int(screen.get_height() // 3.5)))
+            screen.blit(quit, (screen.get_width() // 3, screen.get_height() // 2))
+        # Режим игры
+        elif life:
             if go_move and ship.ship.rect.x == x and ship.ship.rect.y == y:
                 go_move = False
+            # Движение корабля
             if go_move:
                 if ship.ship.rect.x < x:
-                    ship.move_ship(way_ship, 0)
+                    ship.move_ship(player_speed, 0)
                     if ship.ship.rect.x > x:
                         ship.ship.rect.x = x
                 if ship.ship.rect.x > x:
-                    ship.move_ship(-way_ship, 0)
+                    ship.move_ship(-player_speed, 0)
                     if ship.ship.rect.x < x:
                         ship.ship.rect.x = x
                 if ship.ship.rect.y < y:
-                    ship.move_ship(0, way_ship)
+                    ship.move_ship(0, player_speed)
                     if ship.ship.rect.y > y:
                         ship.ship.rect.y = y
                 if ship.ship.rect.y > y:
-                    ship.move_ship(0, -way_ship)
+                    ship.move_ship(0, -player_speed)
                     if ship.ship.rect.y < y:
                         ship.ship.rect.y = y
+            # Создание пули
             timer_shoots += 1
-            if timer_shoots > 500:
+            if timer_shoots > bullet_rate:
                 Bullet(ship.ship.rect.x + 6, ship.ship.rect.y, bullets)
                 timer_shoots = 0
+            # Создание метеорита
             timer_meteors += 1
-            if timer_meteors > 2000:
-                Meteor(width, meteorits)
+            if timer_meteors > 500:
+                Meteor(screen.get_width(), meteorits)
                 timer_meteors = 0
-            screen.fill((0, 0, 0))
-            screen.blit(backround, (0, 0))
-            ship.all_sprites.draw(screen)
+            # Создание монеты
+            timer_coins += 1
+            if timer_coins > 600:
+                Coin(screen.get_width(), coins)
+                timer_coins = 0
+            # Движение пули
             for elem in bullets:
-                elem.rect.y -= way_bullet
+                elem.rect.y -= bullet_speed
                 if elem.rect.y < -100:
                     elem.kill()
                 else:
@@ -145,16 +188,34 @@ def start_game_buttle():
                         if pygame.sprite.collide_mask(elem, elem2):
                             elem2.kill()
                             elem.kill()
+            # Движение метеоритов
             for elem in meteorits:
-                elem.rect.y += way_meteor
-                if elem.rect.y > height:
+                elem.rect.y += meteor_speed
+                if elem.rect.y > screen.get_height():
                     elem.kill()
+            # Движение монет
+            for elem in coins:
+                elem.rect.y += meteor_speed
+                if elem.rect.y > screen.get_height():
+                    elem.kill()
+                if pygame.sprite.collide_mask(ship.ship, elem):
+                    elem.kill()
+            # Новая отрисовка
+            screen.fill((0, 0, 0))
+            screen.blit(backround, (0, 0))
+            ship.all_sprites.draw(screen)
             meteorits.draw(screen)
+            coins.draw(screen)
             bullets.draw(screen)
+            screen.blit(pause, (screen.get_width() - 160, 10))
+            # Кнопка меню
+
         else:
             screen.fill((0, 0, 0))
             gameover_image = load_image('gameover.png', -1)
-            gameover_image = pygame.transform.scale(gameover_image, (1000, 700))
+            gameover_image = pygame.transform.scale(gameover_image, screen.get_size())
             screen.blit(gameover_image, (0, 0))
+            restart_image = load_image('restart.png', -1)
+            screen.blit(restart_image, (screen.get_width() // 4, screen.get_height() // 4 * 3))
         pygame.display.flip()
-    sys.exit()
+    pygame.quit()

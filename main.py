@@ -33,6 +33,7 @@ class Start_Window(QMainWindow, Ui_Start_Window):
     def start_game(self):
         self.hide()
         start_game_buttle()
+        self.show()
 
 
 class Rules_Window(QDialog, Ui_Rules_Window):
@@ -52,7 +53,7 @@ class Shop_Window(QDialog, Ui_Shop_Window):
         super().__init__()
         self.shop_window_Ui(self)
 
-        con = sqlite3.connect("player_data.bd")
+        con = sqlite3.connect("player_data.db")
         cur = con.cursor()
 
         self.balance = cur.execute('''SELECT money FROM info_users WHERE id=1''').fetchone()[0]
