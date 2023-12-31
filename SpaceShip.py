@@ -77,9 +77,11 @@ def start_game_buttle(player=1):
     con = sqlite3.connect("player_data.db")
     cur = con.cursor()
     result = cur.execute(f"""SELECT * FROM info_users WHERE id = {player}""").fetchone()
+    money = result[1]
     player_speed = 10 + 5 * result[2]
     bullet_rate = 225 - 25 * result[3]
     bullet_speed = 6 + 1 * result[4]
+    highscore = result[5]
     meteor_speed = 1
     # Создание окна
     pygame.init()
@@ -96,7 +98,7 @@ def start_game_buttle(player=1):
     quit = pygame.transform.scale(quit, (screen.get_width() // 3, 150))
     # Корабль
     ship = SpaceShip(*screen.get_size())
-    # Флаги и группы перед началом
+    # Флаги переменные и группы перед началом
     mouse_down = False
     go_move = False
     bullets = pygame.sprite.Group()
@@ -105,6 +107,12 @@ def start_game_buttle(player=1):
     timer_shoots = 0
     timer_meteors = 0
     timer_coins = 0
+    meteor_death_count = 0
+    font_50 = pygame.font.Font(None, 40)
+    score_text = font_50.render('SCORE', True, (255, 255, 255))
+    font_10 = pygame.font.Font(None, 25)
+    high_score_text = font_10.render('HIGH', True, (255, 255, 255))
+    high_score = font_10.render(str(highscore), True, (255, 255, 255))
     life = True
     running = True
     # Начало игры
@@ -124,7 +132,7 @@ def start_game_buttle(player=1):
                 if life == 'pause' and screen.get_width() // 3 < event.pos[0] < (
                         screen.get_width() * 2 // 3) and screen.get_height() // 2 < event.pos[1] < (
                         screen.get_height() // 2 + 150):
-                    running = False
+                    life = 'exit'
             if event.type == pygame.MOUSEMOTION and mouse_down:
                 x, y = event.pos[0] - 75, event.pos[1] - 75
                 if not go_move:
@@ -141,6 +149,10 @@ def start_game_buttle(player=1):
                 screen.get_width() // 4, screen.get_height() // 4, screen.get_width() // 2, screen.get_height() // 2))
             screen.blit(continuue, (screen.get_width() // 3, int(screen.get_height() // 3.5)))
             screen.blit(quit, (screen.get_width() // 3, screen.get_height() // 2))
+        # Выход из игры
+        elif life == 'exit':
+            running = False
+            cur.execute(f"""UPDATE info_users SET money = '{money}' WHERE id = '{player}'""")
         # Режим игры
         elif life:
             if go_move and ship.ship.rect.x == x and ship.ship.rect.y == y:
@@ -170,7 +182,7 @@ def start_game_buttle(player=1):
                 timer_shoots = 0
             # Создание метеорита
             timer_meteors += 1
-            if timer_meteors > 500:
+            if timer_meteors > 500 - 20 * (meteor_death_count // 5):
                 Meteor(screen.get_width(), meteorits)
                 timer_meteors = 0
             # Создание монеты
@@ -188,6 +200,7 @@ def start_game_buttle(player=1):
                         if pygame.sprite.collide_mask(elem, elem2):
                             elem2.kill()
                             elem.kill()
+                            meteor_death_count += 1
             # Движение метеоритов
             for elem in meteorits:
                 elem.rect.y += meteor_speed
@@ -200,6 +213,7 @@ def start_game_buttle(player=1):
                     elem.kill()
                 if pygame.sprite.collide_mask(ship.ship, elem):
                     elem.kill()
+                    money += 1
             # Новая отрисовка
             screen.fill((0, 0, 0))
             screen.blit(backround, (0, 0))
@@ -208,9 +222,18 @@ def start_game_buttle(player=1):
             coins.draw(screen)
             bullets.draw(screen)
             screen.blit(pause, (screen.get_width() - 160, 10))
+            screen.blit(score_text, (0, 0))
+            screen.blit(font_50.render(str(meteor_death_count), True, (255, 255, 255)), (40, 30))
+            screen.blit(high_score_text, (12, 60))
+            screen.blit(high_score, (70, 60))
             # Кнопка меню
 
         else:
+            # Обновление бд
+            cur.execute(f"""UPDATE info_users SET money = '{money}' WHERE id = '{player}'""")
+            if highscore < meteor_death_count:
+                cur.execute(f"""UPDATE info_users SET record = '{meteor_death_count}' WHERE id = '{player}'""")
+            # gameover
             screen.fill((0, 0, 0))
             gameover_image = load_image('gameover.png', -1)
             gameover_image = pygame.transform.scale(gameover_image, screen.get_size())
@@ -218,4 +241,5 @@ def start_game_buttle(player=1):
             restart_image = load_image('restart.png', -1)
             screen.blit(restart_image, (screen.get_width() // 4, screen.get_height() // 4 * 3))
         pygame.display.flip()
+    con.commit()
     pygame.quit()
