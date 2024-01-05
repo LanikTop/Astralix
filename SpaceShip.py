@@ -86,6 +86,12 @@ def start_game_buttle(player=1):
     # Создание окна
     pygame.init()
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+    # Загрузка музыки
+    pygame.mixer.music.load('sounds/space_sound.mp3')
+    game_over_sound = pygame.mixer.Sound('sounds/game_over.ogg')
+    #pygame.mixer.music.load('sounds/game_over.mp3')
+    pygame.mixer.music.set_volume(0.1)
+    pygame.mixer.music.play(-1)
     # Задний фон
     backround = load_image('backround.png', -1)
     backround = pygame.transform.scale(backround, screen.get_size())
@@ -115,6 +121,7 @@ def start_game_buttle(player=1):
     high_score = font_10.render(str(highscore), True, (255, 255, 255))
     life = True
     running = True
+    flPause = False
     # Начало игры
     while running:
         pygame.time.delay(10)
@@ -145,6 +152,7 @@ def start_game_buttle(player=1):
                 life = False
         # Режим паузы
         if life == 'pause':
+            pygame.mixer.music.pause() # -> Поставить на паузу
             pygame.draw.rect(screen, pygame.Color((128, 128, 128)), (
                 screen.get_width() // 4, screen.get_height() // 4, screen.get_width() // 2, screen.get_height() // 2))
             screen.blit(continuue, (screen.get_width() // 3, int(screen.get_height() // 3.5)))
@@ -155,6 +163,7 @@ def start_game_buttle(player=1):
             cur.execute(f"""UPDATE info_users SET money = '{money}' WHERE id = '{player}'""")
         # Режим игры
         elif life:
+            pygame.mixer.music.unpause() # -> Снять паузу
             if go_move and ship.ship.rect.x == x and ship.ship.rect.y == y:
                 go_move = False
             # Движение корабля
@@ -234,6 +243,10 @@ def start_game_buttle(player=1):
             if highscore < meteor_death_count:
                 cur.execute(f"""UPDATE info_users SET record = '{meteor_death_count}' WHERE id = '{player}'""")
             # gameover
+            pygame.mixer.music.stop()
+            game_over_sound.set_volume(0.1)
+            game_over_sound.play(1) # -> Звук game over
+
             screen.fill((0, 0, 0))
             gameover_image = load_image('gameover.png', -1)
             gameover_image = pygame.transform.scale(gameover_image, screen.get_size())
@@ -241,5 +254,6 @@ def start_game_buttle(player=1):
             restart_image = load_image('restart.png', -1)
             screen.blit(restart_image, (screen.get_width() // 4, screen.get_height() // 4 * 3))
         pygame.display.flip()
+    game_over_sound.stop()
     con.commit()
     pygame.quit()
