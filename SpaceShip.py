@@ -89,8 +89,7 @@ def start_game_buttle(player=1):
     # Загрузка музыки
     pygame.mixer.music.load('sounds/space_sound.mp3')
     game_over_sound = pygame.mixer.Sound('sounds/game_over.ogg')
-    #pygame.mixer.music.load('sounds/game_over.mp3')
-    pygame.mixer.music.set_volume(0.1)
+    pygame.mixer.music.set_volume(0.015)
     pygame.mixer.music.play(-1)
     # Задний фон
     backround = load_image('backround.png', -1)
@@ -245,7 +244,7 @@ def start_game_buttle(player=1):
             # gameover
             pygame.mixer.music.stop()
             game_over_sound.set_volume(0.1)
-            game_over_sound.play(1) # -> Звук game over
+            # game_over_sound.play(1) # -> Звук game over
 
             screen.fill((0, 0, 0))
             gameover_image = load_image('gameover.png', -1)
