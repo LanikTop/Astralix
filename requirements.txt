@@ -1,0 +1,6 @@
+PyQt5==5.11
+sqlite3==3.11.0
+sys==base
+os==base
+random==standart
+pygame==2.5.2
