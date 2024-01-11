@@ -92,8 +92,9 @@ def start_game_buttle(player=1):
     # Загрузка музыки
     pygame.mixer.music.load('sounds/space_sound.mp3')
     game_over_sound = pygame.mixer.Sound('sounds/game_over.ogg')
+    money_sound = pygame.mixer.Sound('sounds/take_money.ogg')
     # pygame.mixer.music.load('sounds/game_over.mp3')
-    pygame.mixer.music.set_volume(0.1)
+    pygame.mixer.music.set_volume(0.02)
     pygame.mixer.music.play(-1)
     # Задний фон
     backround = load_image('backround.png', -1)
@@ -159,6 +160,8 @@ def start_game_buttle(player=1):
         for elem in meteorits:
             if pygame.sprite.collide_mask(ship.ship, elem) and life is True:
                 life = False
+                game_over_sound.set_volume(0.08)
+                game_over_sound.play()  # -> Звук game over
         # Режим паузы
         if life == 'pause':
             pygame.mixer.music.pause()  # -> Поставить на паузу
@@ -244,6 +247,8 @@ def start_game_buttle(player=1):
                 if pygame.sprite.collide_mask(ship.ship, elem):
                     elem.kill()
                     money += 1
+                    money_sound.set_volume(0.1)
+                    money_sound.play()
             # Новая отрисовка
             screen.fill((0, 0, 0))
             screen.blit(backround, (0, 0))

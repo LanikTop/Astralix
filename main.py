@@ -15,7 +15,7 @@ class Start_Window(QMainWindow, Ui_Start_Window):
     def __init__(self):
         super().__init__()
         self.start_window_Ui(self)
-        self.showMaximized()
+        self.showFullScreen()
         self.rules_button.clicked.connect(self.open_rules_window)
         self.start_game_button.clicked.connect(self.start_game)
         self.shop_button.clicked.connect(self.open_shop_window)
@@ -42,7 +42,7 @@ class Rules_Window(QDialog, Ui_Rules_Window):
     def __init__(self):
         super().__init__()
         self.rules_window_Ui(self)
-        self.showMaximized()
+        self.showFullScreen()
         self.go_back_button.clicked.connect(self.go_back_start_window)
 
     def go_back_start_window(self):
@@ -64,7 +64,7 @@ class Shop_Window(QDialog, Ui_Shop_Window):
     def __init__(self):
         super().__init__()
         self.shop_window_Ui(self)
-        self.showMaximized()
+        self.showFullScreen()
         self.con = sqlite3.connect("player_data.db")
         self.cur = self.con.cursor()
 

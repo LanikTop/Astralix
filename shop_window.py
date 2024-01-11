@@ -44,7 +44,7 @@ class Ui_Shop_Window(object):
         font.setPointSize(14)
         self.player_speed_level_1.setFont(font)
         self.player_speed_level_1.setStyleSheet("background-color: rgb(50, 71, 163);\n"
-                                        "color: rgb(255, 228, 24);")
+                                                "color: rgb(255, 228, 24);")
         self.player_speed_level_1.setObjectName("pushButton_1")
 
         self.shoot_rate_level_1 = QtWidgets.QPushButton(Shop_Window)
@@ -54,7 +54,7 @@ class Ui_Shop_Window(object):
         font.setPointSize(14)
         self.shoot_rate_level_1.setFont(font)
         self.shoot_rate_level_1.setStyleSheet("background-color: rgb(50, 71, 163);\n"
-                                        "color: rgb(255, 228, 24);")
+                                              "color: rgb(255, 228, 24);")
         self.shoot_rate_level_1.setObjectName("pushButton_4")
 
         self.go_back_button = QtWidgets.QPushButton(Shop_Window)
@@ -139,7 +139,7 @@ class Ui_Shop_Window(object):
         font.setPointSize(14)
         self.shoot_speed_level_1.setFont(font)
         self.shoot_speed_level_1.setStyleSheet("background-color: rgb(50, 71, 163);\n"
-                                        "color: rgb(255, 228, 24);")
+                                               "color: rgb(255, 228, 24);")
         self.shoot_speed_level_1.setObjectName("pushButton_7")
 
         self.retranslateUi(Shop_Window)
@@ -166,4 +166,3 @@ class Ui_Shop_Window(object):
         self.shoot_speed_level_1.setText(_translate("Shop_Window", "2 ss"))
         self.player_speed_level_1.setText(_translate("Shop_Window", "2 pl"))
         self.shoot_rate_level_1.setText(_translate("Shop_Window", "2 sr"))
-
