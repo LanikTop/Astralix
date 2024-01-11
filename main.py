@@ -51,15 +51,6 @@ class Rules_Window(QDialog, Ui_Rules_Window):
         self.close()
 
 
-PRICE_PLAYER_SPEED = 2
-PRICE_SHOOT_RATE = 2
-PRICE_SHOOT_SPEED = 2
-
-COUNT_PS = 1
-COUNT_SR = 1
-COUNT_SS = 1
-
-
 class Shop_Window(QDialog, Ui_Shop_Window):
     def __init__(self):
         super().__init__()
@@ -99,50 +90,42 @@ class Shop_Window(QDialog, Ui_Shop_Window):
         self.no_money_label.hide()
 
     def buy_boost(self):
-        global PRICE_SHOOT_RATE
-        global PRICE_SHOOT_SPEED
-        global PRICE_PLAYER_SPEED
-
-        global COUNT_PS
-        global COUNT_SR
-        global COUNT_SS
-
         button = QApplication.instance().sender()
         text = button.text().split()
 
         if self.balance >= int(text[0]):
             # player speed ↓ ↓ ↓ ↓
             if text[1] == 'pl':
-                self.cur.execute('''UPDATE info_users SET player_speed=player_speed+1 WHERE id=1''')
-                self.cur.execute('''UPDATE info_users SET money=money - ? WHERE id=1''', (PRICE_PLAYER_SPEED,))
-                self.balance -= PRICE_PLAYER_SPEED
+                self.player_speed_v = self.cur.execute('SELECT player_speed FROM info_users WHERE id=1').fetchone()[0]
+                self.cur.execute('UPDATE info_users SET player_speed=player_speed+1 WHERE id=1')
+                self.cur.execute('UPDATE info_users SET money=money - ? WHERE id=1', (2 ** self.player_speed_v,))
+                self.balance -= 2 ** self.player_speed_v
                 self.check_balance.setText(str(self.balance))
-                COUNT_PS += 1
-                PRICE_PLAYER_SPEED = 2 ** COUNT_PS
-                self.player_speed_level_1.setText(f'{PRICE_PLAYER_SPEED} pl')
-                self.level_1.setText(f"Уровень {COUNT_PS}")
+                self.player_speed_v = self.cur.execute('SELECT player_speed FROM info_users WHERE id=1').fetchone()[0]
+                self.player_speed_level_1.setText(f'{2 ** self.player_speed_v} pl')
+                self.level_1.setText(f"Уровень {self.player_speed_v}")
                 self.con.commit()
             # shoot rate ↓ ↓ ↓ ↓
             elif text[1] == 'sr':
-                self.cur.execute('''UPDATE info_users SET shoot_rate=shoot_rate+1 WHERE id=1''')
-                self.cur.execute('''UPDATE info_users SET money=money - ? WHERE id=1''', (PRICE_SHOOT_RATE,))
-                self.balance -= PRICE_SHOOT_RATE
+                self.shoot_rate_v = self.cur.execute('SELECT shoot_rate FROM info_users WHERE id=1').fetchone()[0]
+                self.cur.execute('UPDATE info_users SET shoot_rate=shoot_rate+1 WHERE id=1')
+                self.cur.execute('UPDATE info_users SET money=money - ? WHERE id=1', (2 ** self.shoot_rate_v,))
+                self.balance -= 2 ** self.shoot_rate_v
                 self.check_balance.setText(str(self.balance))
-                COUNT_SR += 1
-                PRICE_SHOOT_RATE = 2 ** COUNT_SR
-                self.shoot_rate_level_1.setText(f'{PRICE_SHOOT_RATE} sr')
-                self.level_2.setText(f"Уровень {COUNT_SR}")
+                self.shoot_rate_v = self.cur.execute('SELECT shoot_rate FROM info_users WHERE id=1').fetchone()[0]
+                self.shoot_rate_level_1.setText(f'{2 ** self.shoot_rate_v} sr')
+                self.level_2.setText(f"Уровень {self.shoot_rate_v}")
                 self.con.commit()
             # shoot_speed ↓ ↓ ↓ ↓
             elif text[1] == 'ss':
-                self.cur.execute('''UPDATE info_users SET shoot_speed=shoot_speed+1 WHERE id=1''')
-                self.cur.execute('''UPDATE info_users SET money=money - ? WHERE id=1''', (PRICE_SHOOT_SPEED,))
-                self.balance -= PRICE_SHOOT_SPEED
+                self.shoot_speed_v = self.cur.execute('SELECT shoot_speed FROM info_users WHERE id=1').fetchone()[0]
+                self.cur.execute('UPDATE info_users SET shoot_speed=shoot_speed+1 WHERE id=1')
+                self.cur.execute('UPDATE info_users SET money=money - ? WHERE id=1', (2 ** self.shoot_speed_v,))
+                self.balance -= 2 ** self.shoot_speed_v
                 self.check_balance.setText(str(self.balance))
-                COUNT_SS += 1
-                PRICE_SHOOT_SPEED = 2 ** COUNT_SS
-                self.shoot_speed_level_1.setText(f'{PRICE_SHOOT_SPEED} ss')
-                self.level_3.setText(f"Уровень {COUNT_SS}")
+                self.shoot_speed_v = self.cur.execute('SELECT shoot_speed FROM info_users WHERE id=1').fetchone()[0]
+                self.shoot_speed_level_1.setText(f'{2 ** self.shoot_speed_v} ss')
+                self.level_3.setText(f"Уровень {self.shoot_speed_v}")
                 self.con.commit()
         else:
             self.print_no_money()
