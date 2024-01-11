@@ -19,6 +19,7 @@ class Start_Window(QMainWindow, Ui_Start_Window):
         self.rules_button.clicked.connect(self.open_rules_window)
         self.start_game_button.clicked.connect(self.start_game)
         self.shop_button.clicked.connect(self.open_shop_window)
+        self.go_back_button.clicked.connect(self.exit_system)
 
     def open_shop_window(self):
         self.shop_ex = Shop_Window()
@@ -36,6 +37,9 @@ class Start_Window(QMainWindow, Ui_Start_Window):
         while a:
             a = start_game_buttle()
         self.show()
+
+    def exit_system(self):
+        sys.exit()
 
 
 class Rules_Window(QDialog, Ui_Rules_Window):
