@@ -32,7 +32,9 @@ class Start_Window(QMainWindow, Ui_Start_Window):
 
     def start_game(self):
         self.hide()
-        start_game_buttle()
+        a = start_game_buttle()
+        while a:
+            a = start_game_buttle()
         self.show()
 
 

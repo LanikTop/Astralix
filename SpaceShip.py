@@ -169,10 +169,14 @@ def start_game_buttle(player=1):
         # Выход из игры
         elif life == 'exit':
             running = False
+            game_over_sound.stop()
             cur.execute(f"""UPDATE info_users SET money = '{money}' WHERE id = '{player}'""")
+            con.commit()
         elif life == 'restart':
-            running = False
-            start_game_buttle()
+            cur.close()
+            con.commit()
+            game_over_sound.stop()
+            return True
         # Режим игры
         elif life:
             pygame.mixer.music.unpause()  # -> Снять паузу
@@ -207,8 +211,9 @@ def start_game_buttle(player=1):
                 timer_shoots = 0
             # Создание метеорита
             timer_meteors += 1
-            if timer_meteors > 500 - 20 * (meteor_death_count // 5):
+            if timer_meteors > 100 - 20 * (meteor_death_count // 5):
                 Meteor(screen.get_width(), meteorits)
+                meteor_speed += 0.1
                 timer_meteors = 0
             # Создание монеты
             timer_coins += 1
@@ -272,6 +277,4 @@ def start_game_buttle(player=1):
             screen.blit(restart_image, (screen.get_width() // 10, int(screen.get_height() * 0.8)))
             screen.blit(quit, (screen.get_width() // 2, int(screen.get_height() * 0.8)))
         pygame.display.flip()
-    game_over_sound.stop()
-    con.commit()
     pygame.quit()
