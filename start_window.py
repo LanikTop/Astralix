@@ -94,6 +94,39 @@ class Ui_Start_Window(object):
                                        "border-bottom-color : green")
         self.shop_button.setObjectName("shop_button")
 
+        self.reset_button = QtWidgets.QPushButton(Start_Window)
+        self.reset_button.setGeometry(QtCore.QRect(820, 860, 331, 71))
+        font = QtGui.QFont()
+        font.setFamily("Minecraft Seven Cyrillic (russi")
+        font.setPointSize(28)
+        font.setBold(True)
+        font.setItalic(False)
+        font.setUnderline(False)
+        font.setWeight(75)
+        self.reset_button.setFont(font)
+        self.reset_button.setStyleSheet("background-color: rgb(26, 66, 117);\n"
+                                        "color: rgb(114, 177, 255);\n"
+                                        "\n"
+                                        "border-radius : 50; \n"
+                                        "border : 5px solid red;\n"
+                                        "\n"
+                                        "\n"
+                                        )
+        self.reset_button.setObjectName("reset_button")
+
+        self.reset_data_label = QtWidgets.QLabel(Start_Window)
+        self.reset_data_label.setGeometry(QtCore.QRect(870, 540, 220, 41))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        self.reset_data_label.setFont(font)
+        self.reset_data_label.setStyleSheet("background-color: rgb(162, 250, 199);\n"
+                                          "color: rgb(7, 117, 53);\n"
+                                          "\n"
+                                          "border-radius : 50; \n"
+                                          "border : 3px solid green;")
+        self.reset_data_label.setObjectName("reset_data_label")
+        self.reset_data_label.hide()
+
         self.go_back_button = QtWidgets.QPushButton(Start_Window)
         self.go_back_button.setGeometry(QtCore.QRect(1800, 10, 75, 61))
         font = QtGui.QFont()
@@ -120,3 +153,5 @@ class Ui_Start_Window(object):
         self.rules_button.setText(_translate("Start_Window", "Правила"))
         self.created_by_lb.setText(_translate("Start_Window", "created by Radmir and Ruslan"))
         self.shop_button.setText(_translate("Start_Window", "Магазин"))
+        self.reset_button.setText(_translate("Start_Window", "Сброс"))
+        self.reset_data_label.setText(_translate("Start_Window", "Сброс данных ✓"))

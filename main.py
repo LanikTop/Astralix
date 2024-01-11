@@ -14,12 +14,15 @@ from PyQt5 import QtGui, QtCore
 class Start_Window(QMainWindow, Ui_Start_Window):
     def __init__(self):
         super().__init__()
+        self.con = sqlite3.connect("player_data.db")
+        self.cur = self.con.cursor()
         self.start_window_Ui(self)
         self.showFullScreen()
         self.rules_button.clicked.connect(self.open_rules_window)
         self.start_game_button.clicked.connect(self.start_game)
         self.shop_button.clicked.connect(self.open_shop_window)
         self.go_back_button.clicked.connect(self.exit_system)
+        self.reset_button.clicked.connect(self.data_reset)
 
     def open_shop_window(self):
         self.shop_ex = Shop_Window()
@@ -40,6 +43,12 @@ class Start_Window(QMainWindow, Ui_Start_Window):
 
     def exit_system(self):
         sys.exit()
+
+    def data_reset(self):
+        self.cur.execute('''UPDATE info_users 
+                            SET player_speed=1, shoot_rate=1, shoot_speed=1, money=0, record=0 WHERE id=1''')
+        self.con.commit()
+        self.reset_data_label.show()
 
 
 class Rules_Window(QDialog, Ui_Rules_Window):
