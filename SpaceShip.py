@@ -102,8 +102,8 @@ def start_game_buttle(player=1):
         result = cur.execute(f"""SELECT * FROM info_users WHERE id = {player}""").fetchone()
         money = result[1]
         player_speed = 10 + 10 * result[2]
-        bullet_rate = 225 - 50 * result[3]
-        bullet_speed = 6 + 3 * result[4]
+        bullet_rate = 225 - 15 * result[3]
+        bullet_speed = 6 + 1 * result[4]
         meteor_speed = 1
         highscore = result[5]
         # Создание окна
@@ -144,8 +144,11 @@ def start_game_buttle(player=1):
         high_score_text = font_10.render('HIGH', True, (255, 255, 255))
         high_score = font_10.render(str(highscore), True, (255, 255, 255))
         life = True
-        running = True
+        Meteor(screen.get_width(), meteorits)
+        Meteor(screen.get_width(), meteorits)
+        Meteor(screen.get_width(), meteorits)
         flPause = False
+        running = True
         # Начало игры
         while running:
             pygame.time.delay(10)
@@ -234,9 +237,12 @@ def start_game_buttle(player=1):
                     timer_shoots = 0
                 # Создание метеорита
                 timer_meteors += 1
-                if timer_meteors > 100 - 20 * (meteor_death_count // 5):
+                time_spawn = 150 - 4 * meteor_death_count
+                if time_spawn < 10:
+                    time_spawn = 10
+                if timer_meteors > time_spawn:
                     Meteor(screen.get_width(), meteorits)
-                    meteor_speed += 0.1
+                    meteor_speed += 0.05
                     timer_meteors = 0
                 # Создание монеты
                 timer_coins += 1
