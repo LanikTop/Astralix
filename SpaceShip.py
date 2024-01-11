@@ -246,7 +246,7 @@ def start_game_buttle(player=1):
                     timer_meteors = 0
                 # Создание монеты
                 timer_coins += 1
-                if timer_coins > 600:
+                if timer_coins > 400:
                     Coin(screen.get_width(), coins)
                     timer_coins = 0
                 # Движение пули
