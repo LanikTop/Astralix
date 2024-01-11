@@ -9,7 +9,7 @@ class Ui_Start_Window(object):
         self.background = QtWidgets.QLabel(Start_Window)
         self.background.setGeometry(QtCore.QRect(0, 0, 1920, 1080))
         self.background.setText("")
-        self.background.setPixmap(QtGui.QPixmap("data/maxresdefault.jpg").scaled(1920, 1080))
+        self.background.setPixmap(QtGui.QPixmap("db/data/maxresdefault.jpg").scaled(1920, 1080))
         self.background.setObjectName("background")
         self.name_of_the_game_lb = QtWidgets.QLabel(Start_Window)
         self.name_of_the_game_lb.setGeometry(QtCore.QRect(640, 280, 750, 250))
@@ -146,7 +146,7 @@ class Ui_Start_Window(object):
     def retranslateUi(self, Start_Window):
         _translate = QtCore.QCoreApplication.translate
         Start_Window.setWindowTitle(_translate("Start_Window", "Astralix"))
-        Start_Window.setWindowIcon(QIcon('data\pngwing.png'))
+        Start_Window.setWindowIcon(QIcon('db/data\pngwing.png'))
         self.go_back_button.setText(_translate("Start_Window", "X"))
         self.name_of_the_game_lb.setText(_translate("Start_Window", "Astralix"))
         self.start_game_button.setText(_translate("Start_Window", "Начать"))

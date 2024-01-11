@@ -9,7 +9,7 @@ meteor_death_count = 0
 
 
 def load_image(name, colorkey=None):
-    fullname = os.path.join('data', name)
+    fullname = os.path.join('db/data', name)
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")
         sys.exit()
@@ -97,7 +97,7 @@ def start_game_buttle(player=1):
     try:
         global meteor_death_count
         # Параметры игры
-        con = sqlite3.connect("player_data.db")
+        con = sqlite3.connect("db/player_data.db")
         cur = con.cursor()
         result = cur.execute(f"""SELECT * FROM info_users WHERE id = {player}""").fetchone()
         money = result[1]
@@ -110,9 +110,9 @@ def start_game_buttle(player=1):
         pygame.init()
         screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         # Загрузка музыки
-        pygame.mixer.music.load('sounds/space_sound.mp3')
-        game_over_sound = pygame.mixer.Sound('sounds/game_over.ogg')
-        money_sound = pygame.mixer.Sound('sounds/take_money.ogg')
+        pygame.mixer.music.load('db/sounds/space_sound.mp3')
+        game_over_sound = pygame.mixer.Sound('db/sounds/game_over.ogg')
+        money_sound = pygame.mixer.Sound('db/sounds/take_money.ogg')
         # pygame.mixer.music.load('sounds/game_over.mp3')
         pygame.mixer.music.set_volume(0.02)
         pygame.mixer.music.play(-1)

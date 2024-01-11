@@ -14,7 +14,7 @@ from PyQt5 import QtGui, QtCore
 class Start_Window(QMainWindow, Ui_Start_Window):
     def __init__(self):
         super().__init__()
-        self.con = sqlite3.connect("player_data.db")
+        self.con = sqlite3.connect("db/player_data.db")
         self.cur = self.con.cursor()
         self.start_window_Ui(self)
         self.showFullScreen()
@@ -69,7 +69,7 @@ class Shop_Window(QDialog, Ui_Shop_Window):
         super().__init__()
         self.shop_window_Ui(self)
         self.showFullScreen()
-        self.con = sqlite3.connect("player_data.db")
+        self.con = sqlite3.connect("db/player_data.db")
         self.cur = self.con.cursor()
 
         self.balance = self.cur.execute('''SELECT money FROM info_users WHERE id=1''').fetchone()[0]
@@ -88,15 +88,15 @@ class Shop_Window(QDialog, Ui_Shop_Window):
         self.go_back_button.clicked.connect(self.go_back)
 
         self.player_speed_level_1.clicked.connect(self.buy_boost)
-        self.player_speed_level_1.setIcon(QtGui.QIcon('data\money.png'))
+        self.player_speed_level_1.setIcon(QtGui.QIcon('db/data\money.png'))
         self.player_speed_level_1.setIconSize(QtCore.QSize(40, 40))
 
         self.shoot_rate_level_1.clicked.connect(self.buy_boost)
-        self.shoot_rate_level_1.setIcon(QtGui.QIcon('data\money.png'))
+        self.shoot_rate_level_1.setIcon(QtGui.QIcon('db/data\money.png'))
         self.shoot_rate_level_1.setIconSize(QtCore.QSize(40, 40))
 
         self.shoot_speed_level_1.clicked.connect(self.buy_boost)
-        self.shoot_speed_level_1.setIcon(QtGui.QIcon('data\money.png'))
+        self.shoot_speed_level_1.setIcon(QtGui.QIcon('db/data\money.png'))
         self.shoot_speed_level_1.setIconSize(QtCore.QSize(40, 40))
 
         self.check_balance.setText(str(self.balance))

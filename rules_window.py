@@ -10,12 +10,12 @@ class Ui_Rules_Window(object):
         self.background.setGeometry(QtCore.QRect(0, 0, 1920, 1080))
         self.background.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.background.setText("")
-        self.background.setPixmap(QtGui.QPixmap("data/maxresdefault.jpg").scaled(1920, 1080))
+        self.background.setPixmap(QtGui.QPixmap("db/data/maxresdefault.jpg").scaled(1920, 1080))
         self.background.setObjectName("background")
         self.label = QtWidgets.QLabel(Rules_Window)
         self.label.setGeometry(QtCore.QRect(260, 310, 1920, 1080))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("data/text.png").scaled(1920, 1080))
+        self.label.setPixmap(QtGui.QPixmap("db/data/text.png").scaled(1920, 1080))
         self.label.setObjectName("label")
         self.go_back_button = QtWidgets.QPushButton(Rules_Window)
         self.go_back_button.setGeometry(QtCore.QRect(10, 10, 75, 61))
@@ -36,5 +36,5 @@ class Ui_Rules_Window(object):
     def retranslateUi(self, Rules_Window):
         _translate = QtCore.QCoreApplication.translate
         Rules_Window.setWindowTitle(_translate("Rules_Window", "Astralix"))
-        Rules_Window.setWindowIcon(QIcon('data\pngwing.png'))
+        Rules_Window.setWindowIcon(QIcon('db/data\pngwing.png'))
         self.go_back_button.setText(_translate("Rules_Window", "Back"))

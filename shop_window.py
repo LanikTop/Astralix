@@ -9,7 +9,7 @@ class Ui_Shop_Window(object):
         self.label = QtWidgets.QLabel(Shop_Window)
         self.label.setGeometry(QtCore.QRect(0, 0, 1920, 1080))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("data/maxresdefault.jpg").scaled(1920, 1080))
+        self.label.setPixmap(QtGui.QPixmap("db/data/maxresdefault.jpg").scaled(1920, 1080))
         self.label.setObjectName("label")
         self.shop_label = QtWidgets.QLabel(Shop_Window)
         self.shop_label.setGeometry(QtCore.QRect(690, 50, 380, 111))
@@ -148,7 +148,7 @@ class Ui_Shop_Window(object):
     def retranslateUi(self, Shop_Window):
         _translate = QtCore.QCoreApplication.translate
         Shop_Window.setWindowTitle(_translate("Shop_Window", "Astralix"))
-        Shop_Window.setWindowIcon(QIcon('data\pngwing.png'))
+        Shop_Window.setWindowIcon(QIcon('db/data\pngwing.png'))
         self.shop_label.setText(_translate("Shop_Window", "Магазин"))
         self.check_balance.setText(_translate("Shop_Window", " 0"))
         self.balance_label.setText(_translate("Shop_Window", "Баланс:"))
